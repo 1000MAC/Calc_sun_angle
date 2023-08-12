@@ -1,0 +1,11 @@
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\bin\Debug\Sun_angle_calc.exe.config
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\bin\Debug\Sun_angle_calc.exe
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\bin\Debug\Sun_angle_calc.pdb
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\obj\Debug\Sun_angle_calc.csproj.AssemblyReference.cache
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\obj\Debug\Sun_angle_calc.csproj.SuggestedBindingRedirects.cache
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\obj\Debug\Sun_angle_calc.Form1.resources
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\obj\Debug\Sun_angle_calc.Properties.Resources.resources
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\obj\Debug\Sun_angle_calc.csproj.GenerateResource.cache
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\obj\Debug\Sun_angle_calc.csproj.CoreCompileInputs.cache
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\obj\Debug\Sun_angle_calc.exe
+C:\Users\sakai\OneDrive\Documents\Local_Repo\Calc_Sun_angle\Sun_angle_calc\Sun_angle_calc\obj\Debug\Sun_angle_calc.pdb
