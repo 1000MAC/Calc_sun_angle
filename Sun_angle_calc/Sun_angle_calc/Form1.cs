@@ -20,25 +20,46 @@ namespace Sun_angle_calc
         private void button1_Click(object sender, EventArgs e)
         {
 
-            int day = int.Parse(textBox1.Text);
-            double hour = Double.Parse(textBox2.Text);
+            //int day = int.Parse(textBox1.Text);
+            //double hour = Double.Parse(textBox2.Text);
 
 
 
             //Calc(2023, 240, hour, 36.0428856334391, 139.67763891246423, out h, out a);
-            Calc2(day,hour,35,135);
+            //Calc2(day,hour,35,135);
 
 
             //label2.Text = ("Height=" + h.ToString() + "  Angle=" + a.ToString());
 
 
+            // 位置情報（東京の例）
+            double latitude = 35.6895; // 緯度
+            double longitude = 139.6917; // 経度
+
+            // 日時
+            DateTime dateTime = DateTime.UtcNow; // UTC時間を使用
+            //DateTime DT = dateTimePicker1.Value.ToUniversalTime();
+            //DateTime dateTime = new DateTime(DT.Year, DT.Month, DT.Day, trackBar1.Value, 0, 0);
+
+            //dateTime = dateTime.ToUniversalTime();
+
+
+            // 太陽の高度と方位を計算
+            double solarAltitude = CalculateSolarAltitude(latitude, longitude, dateTime);
+            double solarAzimuth = CalculateSolarAzimuth(latitude, longitude, dateTime);
+
+            Console.WriteLine($"太陽の高度: {solarAltitude} 度");
+            Console.WriteLine($"太陽の方位: {solarAzimuth} 度");
+
+
+
         }
 
 
-        public void Calc2(int day,double hour,double lat ,double lon)
+        public void Calc2(int day, double hour, double lat, double lon)
         {
 
-            double theta = 2 * Math.PI * (day+0.5) / 365;
+            double theta = 2 * Math.PI * (day + 0.5) / 365;
 
             //太陽赤緯(°)
             double delta = 0.33281 - 22.984 * Math.Cos(theta) - 0.34990 * Math.Cos(2 * theta) - 0.13980 * Math.Cos(3 * theta) + 3.7872 * Math.Sin(theta) + 0.03250 * Math.Sin(2 * theta) + 0.07187 * Math.Sin(3 * theta);
@@ -55,8 +76,8 @@ namespace Sun_angle_calc
             t = 15 * t - 180;
 
             double latRad = lat * Math.PI / 180;
-            double deltaRad= delta * Math.PI / 180;
-            double tRad= t * Math.PI / 180;
+            double deltaRad = delta * Math.PI / 180;
+            double tRad = t * Math.PI / 180;
 
             double hRad = Math.Asin(Sin(latRad) * Sin(deltaRad) + Cos(latRad) * Cos(deltaRad) * Cos(tRad));
             double h = hRad * 180 / Math.PI;
@@ -74,7 +95,7 @@ namespace Sun_angle_calc
 
         }
 
-            public void Calc(int year, int day, double hour, double lat, double lon, out double h, out double a)
+        public void Calc(int year, int day, double hour, double lat, double lon, out double h, out double a)
         {
             double latRad = lat * Math.PI / 180;
 
@@ -103,7 +124,7 @@ namespace Sun_angle_calc
 
             // 太陽高度角
             h = Math.Asin(Sin(latRad) * Sin(delta) + Cos(latRad) * Cos(delta) * Cos(t));
-            h= h*180/Math.PI;
+            h = h * 180 / Math.PI;
 
             double sinA = (Cos(delta) * Sin(t)) / Cos(h);
             double cosA = (Sin(h) * Sin(latRad) - Sin(delta)) / (Cos(h) * Cos(latRad));
@@ -126,11 +147,79 @@ namespace Sun_angle_calc
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            int day = int.Parse(textBox1.Text);
-            double hour = (double)trackBar1.Value;
-            Calc2(day, hour, 35, 135);
 
-            textBox2.Text = hour.ToString();
+
+            // 日時
+            //DateTime dateTime = DateTime.UtcNow; // UTC時間を使用
+            DateTime DT = dateTimePicker1.Value.ToUniversalTime();
+            DateTime dateTime = new DateTime(DT.Year, DT.Month, DT.Day, trackBar1.Value, 0, 0);
+
+            dateTime = dateTime.ToUniversalTime();
+
+
+
+            // 位置情報（東京の例）
+            double latitude = 35.6895; // 緯度
+            double longitude = 139.6917; // 経度
+
+            // 太陽の高度と方位を計算
+            double solarAltitude = CalculateSolarAltitude(latitude, longitude, dateTime);
+            double solarAzimuth = CalculateSolarAzimuth(latitude, longitude, dateTime);
+
+            Console.WriteLine($"太陽の高度: {solarAltitude} 度");
+            Console.WriteLine($"太陽の方位: {solarAzimuth} 度");
+
+
+            textBox2.Text = trackBar1.Value.ToString();
+        }
+
+        // 太陽の高度を計算する関数
+        static double CalculateSolarAltitude(double latitude, double longitude, DateTime dateTime)
+        {
+            // 日本標準時（JST）に変換
+            DateTime jstDateTime = dateTime.AddHours(9);
+
+            // 通算日を計算
+            double totalDays = jstDateTime.DayOfYear - 1 + jstDateTime.TimeOfDay.TotalHours / 24;
+
+            // 均時差を計算
+            double equationOfTime = 229.18 * (0.000075 + 0.001868 * Math.Cos(totalDays * (2 * Math.PI / 365)) - 0.032077 * Math.Sin(totalDays * (2 * Math.PI / 365)) - 0.014615 * Math.Cos(2 * totalDays * (2 * Math.PI / 365)) - 0.040849 * Math.Sin(2 * totalDays * (2 * Math.PI / 365)));
+
+            // 太陽時を計算
+            double solarTime = jstDateTime.TimeOfDay.TotalHours + (equationOfTime / 60) + 12;
+
+            // 太陽の高度を計算
+            double declination = 23.45 * Math.Sin((360.0 / 365) * (284 + totalDays) * (Math.PI / 180));
+            double hourAngle = 15 * (solarTime - 12);
+            double altitudeRad = Math.Asin(Math.Sin(latitude * (Math.PI / 180)) * Math.Sin(declination * (Math.PI / 180)) + Math.Cos(latitude * (Math.PI / 180)) * Math.Cos(declination * (Math.PI / 180)) * Math.Cos(hourAngle * (Math.PI / 180)));
+            double altitudeDeg = altitudeRad * (180 / Math.PI);
+
+            return altitudeDeg;
+        }
+
+        // 太陽の方位を計算する関数
+        static double CalculateSolarAzimuth(double latitude, double longitude, DateTime dateTime)
+        {
+            // 日本標準時（JST）に変換
+            DateTime jstDateTime = dateTime.AddHours(9);
+
+            // 通算日を計算
+            double totalDays = jstDateTime.DayOfYear - 1 + jstDateTime.TimeOfDay.TotalHours / 24;
+
+            // 均時差を計算
+            double equationOfTime = 229.18 * (0.000075 + 0.001868 * Math.Cos(totalDays * (2 * Math.PI / 365)) - 0.032077 * Math.Sin(totalDays * (2 * Math.PI / 365)) - 0.014615 * Math.Cos(2 * totalDays * (2 * Math.PI / 365)) - 0.040849 * Math.Sin(2 * totalDays * (2 * Math.PI / 365)));
+
+            // 太陽時を計算
+            double solarTime = jstDateTime.TimeOfDay.TotalHours + (equationOfTime / 60) + 12;
+
+            // 太陽の方位を計算
+            double declination = 23.45 * Math.Sin((360.0 / 365) * (284 + totalDays) * (Math.PI / 180));
+            double hourAngle = 15 * (solarTime - 12);
+            double azimuthRad = Math.Atan2(-Math.Cos(declination * (Math.PI / 180)) * Math.Sin(hourAngle * (Math.PI / 180)), Math.Cos(latitude * (Math.PI / 180)) * Math.Sin(declination * (Math.PI / 180)) - Math.Sin(latitude * (Math.PI / 180)) * Math.Cos(declination * (Math.PI / 180)) * Math.Cos(hourAngle * (Math.PI / 180)));
+            double azimuthDeg = (azimuthRad * (180 / Math.PI) + 360) % 360;
+
+            return azimuthDeg;
         }
     }
 }
+
