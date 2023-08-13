@@ -46,6 +46,8 @@ namespace Sun_angle_calc
             //均時差(hour)
             double e = 0.0072 * Math.Cos(theta) - 0.0528 * Math.Cos(2 * theta) - 0.0012 * Math.Cos(3 * theta) - 0.1229 * Math.Sin(theta) - 0.1565 * Math.Sin(2 * theta) - 0.0041 * Math.Sin(3 * theta);
 
+            e = 0;
+
             //e = 0;
 
             //時角(°)
@@ -56,11 +58,18 @@ namespace Sun_angle_calc
             double deltaRad= delta * Math.PI / 180;
             double tRad= t * Math.PI / 180;
 
-            double h = Math.Asin(Sin(latRad) * Sin(deltaRad) + Cos(latRad) * Cos(deltaRad) * Cos(tRad));
-            h = h * 180 / Math.PI;
+            double hRad = Math.Asin(Sin(latRad) * Sin(deltaRad) + Cos(latRad) * Cos(deltaRad) * Cos(tRad));
+            double h = hRad * 180 / Math.PI;
+
+            double SinA = Math.Cos(deltaRad) * Math.Sin(tRad) / Math.Cos(hRad);
+            double CosA = (Math.Sin(hRad) * Math.Sin(latRad) - Math.Sin(deltaRad) / Math.Cos(hRad) / Math.Cos(latRad));
+
+            double ARad = Math.Atan2(SinA, CosA) + Math.PI;
+            double A = ARad * 180 / Math.PI;
+
+            label2.Text = "高度:" + h.ToString("F1") + "方位:" + A.ToString("F1");
 
 
-            label2.Text = h.ToString();
 
 
         }
@@ -115,5 +124,13 @@ namespace Sun_angle_calc
             return Math.Sin(theta);
         }
 
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            int day = int.Parse(textBox1.Text);
+            double hour = (double)trackBar1.Value;
+            Calc2(day, hour, 35, 135);
+
+            textBox2.Text = hour.ToString();
+        }
     }
 }
